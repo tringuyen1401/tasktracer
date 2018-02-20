@@ -1,0 +1,19 @@
+ <h1>Log In</h1>
+<!-- session_path(@conn, :create) -->
+<%= form_tag("/session", method: :post) do %>
+  <div class="form-group">
+    Email
+    <input type="email" name="email" placeholder="user@example.com" >
+  </div>
+  <!-- passwords come later -->
+  <div class="form-group">
+    <button class="btn btn-primary">Log in</button>
+    <%= link "Register", to: user_path(@conn, :new) %>
+  </div>
+  <div>
+    <%= link "User List", to: user_path(@conn, :index) %>
+  </div>
+  <div>
+    <%= link "Task List", to: task_path(@conn, :index) %>
+  </div>
+<% end %>
