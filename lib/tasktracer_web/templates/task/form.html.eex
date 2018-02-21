@@ -1,4 +1,4 @@
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, fn f ->%>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -6,36 +6,37 @@
   <% end %>
 
   <div class="form-group">
-    <%= label f, :title, class: "control-label" %>
+    <h4><%= label f, :title, class: "label" %>
     <%= text_input f, :title, class: "form-control" %>
     <%= error_tag f, :title %>
   </div>
 
   <div class="form-group">
-    <%= label f, :description, class: "control-label" %>
+    <h4><%= label f, :description, class: "label" %>
     <%= textarea f, :description, class: "form-control" %>
     <%= error_tag f, :description %>
   </div>
 
   <div class="form-group">
-    <%= label f, :is_complete, class: "control-label" %>
-    <%= checkbox f, :is_complete, class: "checkbox" %>
+    <h4><%= label f, :complete?, class: "label" %>
+    <span><%= checkbox f, :is_complete, class: "checkbox" %></span>
     <%= error_tag f, :is_complete %>
   </div>
 
   <div class="form-group">
-    <%= label f, :user_id, class: "control-label" %>
-    <%= text_input f, :user_id, class: "form-contorl"  %>
+    <h4><%= label f, :user_id, class: "control-label" %></h4>
+    <%= select f, :user_id, @all_users  %>
     <%= error_tag f, :user_id %>
   </div>
 
   <div class="form-group">
-    <%= label f, :assigned_at, class: "control-label" %>
+    <h4><%= label f, :assigned_at, class: "control-label" %></h4>
     <%= datetime_select f, :assigned_at, class: "form-control" %>
     <%= error_tag f, :assigned_at %>
   </div>
 
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
+    <span><%= link "Back", to: user_path(@conn, :index), class: "btn btn-info btn-xs" %></span>
   </div>
 <% end %>

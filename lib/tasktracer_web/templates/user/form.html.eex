@@ -6,18 +6,19 @@
   <% end %>
 
   <div class="form-group">
-    <%= label f, :email, class: "control-label" %>
+    <h4><%= label f, :email, class: "control-label" %></h4>
     <%= text_input f, :email, class: "form-control" %>
     <%= error_tag f, :email %>
   </div>
 
   <div class="form-group">
-    <%= label f, :name, class: "control-label" %>
+    <h4><%= label f, :name, class: "control-label" %></h4>
     <%= text_input f, :name, class: "form-control" %>
     <%= error_tag f, :name %>
   </div>
 
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
+    <span><%= link "Back", to: user_path(@conn, :index), class: "btn btn-info btn-xs" %></span>
   </div>
 <% end %>

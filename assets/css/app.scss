@@ -1,0 +1,36 @@
+/* This file is for your main application css. */
+@import "bootstrap";
+
+.jumbotron {
+    color: $brand-danger;
+}
+
+h2 {
+  color: $brand-danger;
+}
+
+.form-group {
+  font-size: 20px;
+  text-align: center;
+  padding: 5px;
+}
+.user {
+  font-size: 20px;
+  margin-left: 30%;
+  padding: 15px;
+  border: 1px solid black;
+}
+
+.task {
+  font-size: 20px;
+  margin-left: 30%;
+  padding: 15px;
+  border: 1px solid black;
+}
+
+h1 {
+  font-size: 50px;
+  text-align: center;
+  color: blue;
+}
+
