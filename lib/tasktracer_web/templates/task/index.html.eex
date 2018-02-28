@@ -18,7 +18,7 @@
     <tr>
       <td><%= task.title %></td>
       <td><%= task.description %></td>
-      <td><%= Integer.floor_div(Integer.floor_div(DateTime.diff(DateTime.utc_now(), task.assigned_at || DateTime.utc_now()), 60), 15) * 15  %></td>
+      <td><%= if (task.user != nil) do Integer.floor_div(Integer.floor_div(DateTime.diff(DateTime.utc_now(), task.assigned_at || DateTime.utc_now()), 60), 15) * 15 else "" end %></td>
       <td><%= if (task.user != nil) do task.user.name else "" end %></td>
 
       <td class="text-right">

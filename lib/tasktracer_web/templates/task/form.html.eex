@@ -25,18 +25,47 @@
 
   <div class="form-group">
     <h4><%= label f, :user_id, class: "control-label" %></h4>
-    <%= select f, :user_id, @all_users  %>
+    <%= select f, :user_id, Enum.uniq([if (@task.user) do @task.user.email else nil end] ++ Enum.map(Enum.filter(@all_users, fn(a) -> a.manager_id == @current_user.id end), fn(u) -> u.email end)) %>
     <%= error_tag f, :user_id %>
   </div>
 
   <div class="form-group">
     <h4><%= label f, :assigned_at, class: "control-label" %></h4>
-    <%= datetime_select f, :assigned_at, class: "form-control" %>
+    <%= datetime_select f, :assigned_at, class: "form-control", value: @task.assigned_at %>
     <%= error_tag f, :assigned_at %>
   </div>
-
+  
+  <%= if Enum.at(@tbs,0) != nil do %>
   <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
-    <span><%= link "Back", to: user_path(@conn, :index), class: "btn btn-info btn-xs" %></span>
+    <h4><%= label f, :timeblock, class: "control-label" %></h4>
+    <%= select f, :timeblock, Enum.map(@tbs, fn tb -> tb.id end) %>
+    <%= error_tag f, :timeblock %>
+  </div>
+
+  <table class="table">
+  <thead>
+    <tr>
+      <th>Start Time</th>
+      <th>End Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= IO.puts(Kernel.inspect(@conn.params)) %>
+    <div class="form-group border border-primary">
+          <tr>
+          <td><%= datetime_select f, :starttb, class: "form-control", value: Enum.at(Tuple.to_list(DateTime.from_iso8601(Enum.at(@tbs,0).starttb)),1) %>
+      <%= error_tag f, :starttb %>    
+          </td>
+          <td><%= datetime_select f, :endtb, value: Enum.at(Tuple.to_list(DateTime.from_iso8601(Enum.at(@tbs,0).endtb)),1), class: "form-control" %>
+      <%= error_tag f, :endtb %>
+          </td>
+          </tr>
+      </div>
+      </tbody>
+  </table>    
+  <% end %>
+  <div class="form-group">
+    <%= submit "Submit", class: "edit-btn btn btn-primary" %>
+    <span><%= link "Back", to: task_path(@conn, :index), class: "btn btn-info btn-xs" %></span>
   </div>
 <% end %>

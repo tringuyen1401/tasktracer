@@ -1,0 +1,15 @@
+<h1>Your Feed</h1>
+
+<%= Enum.map Enum.filter(@tasks, fn a -> a.user != nil && Map.get(a.user,:manager_id) == @current_user.id end), fn task -> %>
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title"><%= task.title %></h6>
+        <p><%= task.user.name %></p>
+        <p><%= task.is_complete %></p>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

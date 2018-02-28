@@ -2,7 +2,7 @@ defmodule Tasktracer.Social.Task do
   use Ecto.Schema
   import Ecto.Changeset
   alias Tasktracer.Social.Task
-
+  alias Tasktracer.Social.Timeblock
 
   schema "tasks" do
     field :assigned_at, :utc_datetime
@@ -10,6 +10,7 @@ defmodule Tasktracer.Social.Task do
     field :is_complete, :boolean, default: false
     field :title, :string
     belongs_to :user, Tasktracer.Accounts.User
+    has_many :timeblocks, Timeblock, foreign_key: :starttb
 
     timestamps()
   end

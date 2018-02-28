@@ -1,4 +1,9 @@
 <h2>Task Details</h2>
+<script>
+  window.timeblock_path = "<%= timeblock_path(@conn, :index) %>";
+  window.current_user_id = "<%= @current_user.id %>";
+</script>
+<div>
 
 <ul>
 
@@ -24,10 +29,50 @@
 
   <li>
     <strong>Assignee:</strong>
-    <%= if (@task.user != nil) do @task.user.name else nil  end %>
+    <%= if (@task.user != nil) do @task.user.name else nil end %>
+  </li>
+
+  <li>
+    <strong>Time spent (minutes):</strong>
+    <%= if (@tbs != nil && List.first(@tbs) != nil) do Enum.reduce(Enum.map(@tbs, fn tb -> Integer.floor_div(DateTime.diff(Enum.at(Tuple.to_list(DateTime.from_iso8601(tb.endtb)),1), Enum.at(Tuple.to_list(DateTime.from_iso8601(tb.starttb)),1)),60) end), fn(x,y) -> x+y end) else 0 end %>
+  </li>
+
+  <li>
+    <strong>Timeblocks:</strong>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Start Time</th>
+          <th>End Time</th>
+          
+        </tr>
+      </thead>          
+      <tbody> 
+        <%= for tb <- @tbs do %>
+          <tr>
+          <td><%= tb.starttb %></td>
+          <td><%= tb.endtb %></td>
+          <td class="text-right">
+            <span class="edit"><%= link "Edit", to: task_path(@conn, :edit, @task, Enum.filter(@tbs, fn t -> tb.id == t.id end)), class: "btn btn-warning bt-xs" %></span>
+          </td>
+          </tr>
+        <%end %>
+      </tbody>
+  </table>
   </li>
 
 </ul>
-
+</div>
+<button type="button"
+        class="tb-start btn btn-primary"
+        data-task-id="<%= @task.id %>"
+        data-start-time="<%= DateTime.to_string(DateTime.utc_now())%>"
+        onClick="window.location.href=window.location.href">Start</button>
+<button class="tb-stop btn btn-secondary"
+        data-task-id="<%= @task.id %>"
+        data-stop-time="<%= DateTime.to_string(DateTime.utc_now()) %>"
+        data-time-id="<%= if (Enum.at(@tbs,0) != nil) do Enum.at(@tbs, 0).id else -1 end %>"
+        data-start-time="<%= if (Enum.at(@tbs,0) != nil) do Enum.at(@tbs, 0).starttb else -1 end %>"
+        onClick="window.location.href=window.location.href">Stop</button>
 <span class="edit"><%= link "Edit", to: task_path(@conn, :edit, @task), class: "btn btn-warning bt-xs" %></span>
 <span class="back"><%= link "Back", to: task_path(@conn, :index), class: "btn btn-info btn-xs" %></span>

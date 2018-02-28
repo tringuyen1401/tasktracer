@@ -11,11 +11,26 @@ defmodule TasktracerWeb.UserController do
 
   def new(conn, _params) do
     changeset = Accounts.change_user(%User{})
-    render(conn, "new.html", changeset: changeset)
+    all_users = Enum.map(Accounts.list_users(), fn(user) -> user.email end)
+    render(conn, "new.html", changeset: changeset, all_users: [nil] ++ all_users)
+  end
+
+  def email_to_id(user_params) do
+    IO.puts(Kernel.inspect(user_params))
+    manager_email = user_params |> Map.get("manager_id")
+    manager = nil
+    new_params = user_params
+    if manager_email != "" do
+      user = Accounts.get_user_by_email(user_params |> Map.get("manager_id"))
+      new_params = Map.update!(user_params, "manager_id", fn cur -> user |> Map.get(:id) end)
+    end
+    new_params
   end
 
   def create(conn, %{"user" => user_params}) do
-    case Accounts.create_user(user_params) do
+    new_params = email_to_id(user_params)
+
+    case Accounts.create_user(new_params) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User created successfully.")
@@ -27,19 +42,22 @@ defmodule TasktracerWeb.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
-    render(conn, "show.html", user: user)
+    all_users = Accounts.list_users()
+    render(conn, "show.html", user: user, all_users: all_users)
   end
 
   def edit(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     changeset = Accounts.change_user(user)
-    render(conn, "edit.html", user: user, changeset: changeset)
+    all_users = Enum.map(Accounts.list_users(), fn(user) -> user.email end)
+    render(conn, "edit.html", user: user, changeset: changeset, all_users: [nil] ++ all_users)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
-
-    case Accounts.update_user(user, user_params) do
+    new_params = email_to_id(user_params)
+   
+    case Accounts.update_user(user, new_params) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User updated successfully.")

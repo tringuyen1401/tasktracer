@@ -12,6 +12,16 @@
     <%= @user.name %>
   </li>
 
+  <li>
+    <strong>Manager:</strong>
+    <%= if (@user.manager != nil) do @user.manager.name else nil end %>
+  </li>
+
+  <li>
+    <strong>Underlings:</strong>
+    <%= Kernel.inspect(Enum.map(Enum.filter(@all_users, fn(u) -> u.manager_id == @user.id end), fn(a) -> a.name end)) %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: user_path(@conn, :edit, @user), class: "btn btn-warning btn-xs" %></span>

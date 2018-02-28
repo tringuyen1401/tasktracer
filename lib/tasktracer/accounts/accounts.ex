@@ -19,6 +19,7 @@ defmodule Tasktracer.Accounts do
   """
   def list_users do
     Repo.all(User)
+    |> Repo.preload(:manager)
   end
 
   @doc """
@@ -35,7 +36,10 @@ defmodule Tasktracer.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload(:manager)
+  end
 
   @doc """
   Creates a user.
